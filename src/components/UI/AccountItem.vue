@@ -44,7 +44,12 @@ const onTypeChange = () => emits("type-change", props.account.id);
         @blur="onSave"
         maxlength="50"
         placeholder="пример: admin;test"
-        class="w-full px-3 py-2 border rounded border-black"
+        :class="[
+          'w-full px-3 py-2 border rounded',
+          account.errors.label
+            ? 'border-red-600'
+            : 'border-black focus:border-blue-500',
+        ]"
       />
       <p class="mt-1 min-h-[1.25rem] invisible"></p>
     </div>

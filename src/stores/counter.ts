@@ -6,10 +6,16 @@ export const useAccountsStore = defineStore("accounts", () => {
   const accounts = ref<IAccount[]>([]);
 
   const load = () => {
-    const data = localStorage.getItem("accounts");
-    if (data) {
-      accounts.value = JSON.parse(data);
+    const tempData = localStorage.getItem("accounts");
+    let f: IAccount[];
+    if (tempData) {
+      f = JSON.parse(tempData);
+    } else {
+      f = [];
     }
+    accounts.value = f.filter(
+      (e) => !e.errors.label && !e.errors.login && !e.errors.password
+    );
   };
 
   watch(
@@ -39,6 +45,9 @@ export const useAccountsStore = defineStore("accounts", () => {
     const errors: Partial<
       Record<keyof Omit<IAccount, "id" | "errors">, string>
     > = {};
+    if (typeof account.label === "string" && account.label.trim().length > 50) {
+      errors.label = "Максимум 50 символов";
+    }
 
     if (!account.login.trim()) {
       errors.login = "Обязательно к заполнению";
@@ -52,6 +61,7 @@ export const useAccountsStore = defineStore("accounts", () => {
         errors.password = "Максимум 100 символов";
       }
     }
+
     account.errors = errors;
     return Object.keys(errors).length === 0;
   };
