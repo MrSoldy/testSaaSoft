@@ -7,12 +7,7 @@ export const useAccountsStore = defineStore("accounts", () => {
 
   const load = () => {
     const tempData = localStorage.getItem("accounts");
-    let f: IAccount[];
-    if (tempData) {
-      f = JSON.parse(tempData);
-    } else {
-      f = [];
-    }
+    const f: IAccount[] = tempData ? JSON.parse(tempData) : [];
     accounts.value = f.filter(
       (e) => !e.errors.label && !e.errors.login && !e.errors.password
     );
